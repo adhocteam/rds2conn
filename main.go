@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -16,10 +15,8 @@ import (
 
 func usage() {
 	fmt.Fprintf(os.Stderr, `Usage: %s [options] {instance id|private IPv4 address|name}
-
 Options:
-  -v	        be verbose (passes -v to underlying SSH invocation)
-  -p	        path to SSH key files
+  -v	        be verbose
   -P, --profile	AWS profile to be used for the session (optional)
   -d, --database        show rds db instances and connection info
 `, filepath.Base(os.Args[0]))
@@ -27,10 +24,7 @@ Options:
 }
 
 var verboseFlag bool
-var remoteCommand string
-var listInstances bool
 var listDB bool
-var kp string
 var profile string
 
 func debugf(format string, args ...interface{}) {
@@ -50,12 +44,6 @@ func printError(err error) {
 
 func init() {
 	// default key path to home dir, inherit if env var if set
-	p := os.Getenv("HOME") + "/.ssh/"
-	if s := os.Getenv("AWS_KEY_PATH"); s != "" {
-		p = s
-	}
-
-	flag.StringVar(&kp, "p", p, "path to directory with SSH keys, default is $HOME/.ssh")
 	flag.BoolVar(&verboseFlag, "v", false, "be verbose")
 
 	const (
@@ -98,9 +86,4 @@ func main() {
 		}
 		printDBS(rdsToDb(resp.DBInstances))
 	}
-}
-
-func keypath(s string) string {
-	debugf("key path is: %s", kp)
-	return path.Join(kp, s+".pem")
 }
