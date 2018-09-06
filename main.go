@@ -1,4 +1,4 @@
-package main
+package main // import "github.com/adhocteam/rds2conn"
 
 import (
 	"flag"
