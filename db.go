@@ -26,8 +26,6 @@ const TimeFormat = "2006-01-02 15:04"
 
 func createConnectionString(instance *rds.DBInstance) string {
 	switch *instance.Engine {
-	case "mysql":
-		return fmt.Sprintf("mysql://%v:PASSWORD@%v:%v/%v", *instance.MasterUsername, *instance.Endpoint.Address, *instance.Endpoint.Port, *instance.DBName)
 	case "postgres":
 		return fmt.Sprintf("postgresql://%v:PASSWORD@%v:%v/%v", *instance.MasterUsername, *instance.Endpoint.Address, *instance.Endpoint.Port, *instance.DBName)
 	default:
@@ -60,9 +58,6 @@ func printConnectionCommand(instance *DBInstance) {
 	var resp string
 	switch instance.Engine {
 	case "mysql":
-		resp = fmt.Sprintln("Connection String")
-		resp += fmt.Sprintf("%v\n", instance.ConnectionString)
-		resp += fmt.Sprintln("")
 		resp += fmt.Sprintln("Connection Command:")
 		resp += fmt.Sprintf("mysql --host %v -u %v --port %v -p", instance.Endpoint.Address, instance.Account, instance.Endpoint.Port)
 		resp += fmt.Sprintln("")
